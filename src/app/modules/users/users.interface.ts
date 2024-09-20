@@ -6,6 +6,6 @@ export interface Tuser{
     passwordChangeDate?: Date;
     role: TUserRole;
     isDeleted: boolean;
-    isBlocked: boolean;
+    status: 'blocked'|'active';
     // verifyPassword: (password: string) => Promise<boolean>;
 }

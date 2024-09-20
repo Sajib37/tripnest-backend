@@ -24,9 +24,10 @@ const UserSchema = new Schema<Tuser>({
         type: Boolean,
         default: false,
     },
-    isBlocked: {
-        type: Boolean,
-        default:false
+    status: {
+        type: String,
+        default: 'active',
+        enum:['blocked','active']
     }
 })
 

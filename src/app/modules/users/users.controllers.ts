@@ -15,7 +15,30 @@ const createUser = catchAsync(async (req, res) => {
     });
 });
 
+const blockedUser=catchAsync(async (req, res) => {
+    const id: string = req.params.id;
+    const result = await userService.blockedUserIntoDB(id)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User is blocked !!",
+        data: result,
+    });
+}); 
+
+const deletUser=catchAsync(async (req, res) => {
+    const id: string = req.params.id;
+    const result = await userService.deletUserIntoDB(id)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User is deleted !!",
+        data: result,
+    });
+}); 
 
 export const userControllers = {
-    createUser
+    createUser,
+    blockedUser,
+    deletUser
 }

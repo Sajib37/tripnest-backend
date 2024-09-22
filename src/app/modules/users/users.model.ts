@@ -9,6 +9,10 @@ const UserSchema = new Schema<Tuser>({
         unique: true,
         required: true
     },
+    id:{
+        type: String,
+        unique: true,
+    },
     password: {
         type: String,
         required: true,
@@ -32,7 +36,7 @@ const UserSchema = new Schema<Tuser>({
         default: 'active',
         enum:['blocked','active']
     }
-})
+},{timestamps:true})
 
 // Add the mongoose-bcrypt plugin
 UserSchema.plugin(mongooseBcrypt);

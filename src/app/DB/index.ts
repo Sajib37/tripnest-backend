@@ -4,7 +4,8 @@ import { User } from "../modules/users/users.model";
 import config from "../config";
 
 const superAdmin : Partial<Tuser> = {
-    email:config.super_admin_email,
+    email: config.super_admin_email,
+    id: 'superAdmin',
     password:config.super_admin_password,
     role:USER_ROLE.superAdmin,
     isDeleted:false,

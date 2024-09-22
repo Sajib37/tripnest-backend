@@ -1,9 +1,10 @@
 import httpStatus from "http-status";
 import AppError from "../../errors/appError";
 import { User } from "../users/users.model";
-import { TLoginUser } from "./auth.interface";
+import { TLoginUser, TPasswordChange } from "./auth.interface";
 import config from "../../config";
 import { createToken } from "./auth.utils";
+import { JwtPayload } from "jsonwebtoken";
 
 const loginUserToSite = async (payload: TLoginUser) => {
     const { email, password } = payload;
@@ -51,7 +52,14 @@ const loginUserToSite = async (payload: TLoginUser) => {
     };
 };
 
+const changePasswordIntoDB = async (userData:JwtPayload, payload: TPasswordChange) => {
+    const { newPassword, oldPassword } = payload;
+   
+    
+}
+
 
 export const authServices = {
-    loginUserToSite
+    loginUserToSite,
+    changePasswordIntoDB
 }

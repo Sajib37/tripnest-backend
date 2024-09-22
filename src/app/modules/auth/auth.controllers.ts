@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
-import { TLoginUser } from "./auth.interface";
+import { TLoginUser, TPasswordChange } from "./auth.interface";
 import config from "../../config";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { authServices } from "./auth.service";
+import { JwtPayload } from "jsonwebtoken";
 
 const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const payload: TLoginUser= req.body
@@ -30,7 +31,26 @@ const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunct
     })
 })
 
+const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const payload: TPasswordChange= req.body
+    
+    // here, req.user set on the auth.ts utils. So, If wanna get the req.user we must use auth middleware
+    const userData: JwtPayload = req.user;
+    console.log(userData)
+    
+    const result= await authServices.changePasswordIntoDB(userData,payload)
+    sendResponse(res, {
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Login Successfully!!",
+        data: {
+            
+        }
+    })
+})
+
 
 export const authController = {
-    loginUser
+    loginUser,
+    changePassword
 }

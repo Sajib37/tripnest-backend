@@ -37,8 +37,21 @@ const deletUser=catchAsync(async (req, res) => {
     });
 }); 
 
+const getAllUser = catchAsync(async (req, res) => {
+    const query: Record<string,unknown>=req.query
+    const result= await userService.getAllUserFromDB(query)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "get all users!!",
+        meta:result.meta,
+        data: result.result,
+    });
+})
+
 export const userControllers = {
     createUser,
     blockedUser,
-    deletUser
+    deletUser,
+    getAllUser
 }

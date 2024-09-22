@@ -35,6 +35,7 @@ const loginUserToSite = async (payload: TLoginUser) => {
     const jwtPayload = {
         email: isUserExist?.email,
         role: isUserExist?.role,
+        id: isUserExist?.id
     };
     const accessToken = createToken(
         jwtPayload,
@@ -53,10 +54,46 @@ const loginUserToSite = async (payload: TLoginUser) => {
 };
 
 const changePasswordIntoDB = async (userData:JwtPayload, payload: TPasswordChange) => {
-    const { newPassword, oldPassword } = payload;
+    const { newPassword, oldPassword:password } = payload;
    
-    
-}
+    const { id, role } = userData;
+    const isUserExist = await User
+        .findOne({ id })
+        .select("+password");
+
+    if (!isUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "Invalid User !!");
+    }
+    const isDeleted = isUserExist.isDeleted;
+    if (isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted !!");
+    }
+    const userStatus = isUserExist.status;
+    if (userStatus === "blocked") {
+        throw new AppError(httpStatus.FORBIDDEN, "User is Blocked !!");
+    }
+
+    const matchPassword = await isUserExist.verifyPassword(password);
+
+    if (!matchPassword) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "old password do not matched !!"
+        );
+    }
+
+    const result = await User.findOneAndUpdate(
+        { id, role: role },
+        {
+            password: newPassword,
+            passwordChangeDate: new Date(),
+        },
+        { new: true }
+    );
+
+    return result;
+};
+
 
 
 export const authServices = {

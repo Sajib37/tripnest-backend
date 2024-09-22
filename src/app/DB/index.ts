@@ -5,7 +5,7 @@ import config from "../config";
 
 const superAdmin : Partial<Tuser> = {
     email: config.super_admin_email,
-    id: 'superAdmin',
+    id: 'SA-0001',
     password:config.super_admin_password,
     role:USER_ROLE.superAdmin,
     isDeleted:false,

@@ -36,15 +36,14 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
     
     // here, req.user set on the auth.ts utils. So, If wanna get the req.user we must use auth middleware
     const userData: JwtPayload = req.user;
-    console.log(userData)
     
     const result= await authServices.changePasswordIntoDB(userData,payload)
     sendResponse(res, {
         statusCode:httpStatus.OK,
         success:true,
-        message:"Login Successfully!!",
+        message:"Password changed Successfully!!",
         data: {
-            
+            result
         }
     })
 })

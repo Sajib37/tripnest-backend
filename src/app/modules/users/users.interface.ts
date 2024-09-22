@@ -7,5 +7,5 @@ export interface Tuser{
     role: TUserRole;
     isDeleted: boolean;
     status: 'blocked'|'active';
-    // verifyPassword: (password: string) => Promise<boolean>;
+    verifyPassword: (password: string) => Promise<boolean>;
 }

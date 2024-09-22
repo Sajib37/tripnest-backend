@@ -10,7 +10,8 @@ const UserSchema = new Schema<Tuser>({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select:0
     },
     passwordChangeDate: {
         type: Date

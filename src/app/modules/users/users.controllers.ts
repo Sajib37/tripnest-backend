@@ -5,7 +5,7 @@ import { userService } from "./users.service";
 import { Tuser } from "./users.interface";
 
 const createUser = catchAsync(async (req, res) => {
-    const payload: Tuser = req.body;
+    const payload: Partial<Tuser> = req.body;
     const result = await userService.createUserIntoDB(payload)
     sendResponse(res, {
         statusCode: httpStatus.OK,

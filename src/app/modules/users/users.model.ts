@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { Tuser } from "./users.interface";
 import { USER_ROLE } from "./users.constant";
+import mongooseBcrypt from 'mongoose-bcrypt';
 
 const UserSchema = new Schema<Tuser>({
     email: {
@@ -8,9 +9,15 @@ const UserSchema = new Schema<Tuser>({
         unique: true,
         required: true
     },
+    id:{
+        type: String,
+        unique: true,
+    },
     password: {
         type: String,
-        required: true
+        required: true,
+        bcrypt:true,
+        select:0
     },
     passwordChangeDate: {
         type: Date
@@ -29,6 +36,9 @@ const UserSchema = new Schema<Tuser>({
         default: 'active',
         enum:['blocked','active']
     }
-})
+},{timestamps:true})
+
+// Add the mongoose-bcrypt plugin
+UserSchema.plugin(mongooseBcrypt);
 
 export const User= model<Tuser>('User',UserSchema)

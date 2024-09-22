@@ -7,6 +7,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { authServices } from "./auth.service";
 import { JwtPayload } from "jsonwebtoken";
+import AppError from "../../errors/appError";
 
 const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const payload: TLoginUser= req.body
@@ -48,8 +49,23 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
     })
 })
 
+const refreshToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+        throw new AppError(httpStatus.BAD_REQUEST, "refresh not found in browser cookie !!")
+    }
+    const result= await authServices.refreshTokenService(refreshToken)
+    sendResponse(res, {
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Access token recreated Successfully!!",
+        data: result
+    })
+})
+
 
 export const authController = {
     loginUser,
-    changePassword
+    changePassword,
+    refreshToken
 }

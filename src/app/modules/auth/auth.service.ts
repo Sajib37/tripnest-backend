@@ -5,6 +5,7 @@ import { TLoginUser, TPasswordChange } from "./auth.interface";
 import config from "../../config";
 import { createToken } from "./auth.utils";
 import { JwtPayload } from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 const loginUserToSite = async (payload: TLoginUser) => {
     const { email, password } = payload;
@@ -94,9 +95,65 @@ const changePasswordIntoDB = async (userData:JwtPayload, payload: TPasswordChang
     return result;
 };
 
+const refreshTokenService = async (token: string) => {
+    // verify token and get the decoded
 
+    const decoded: JwtPayload = jwt.verify(
+        token,
+        config.jwt_refresh_secret as string
+    ) as JwtPayload;
+
+    const { id, iat } = decoded;
+
+    // check the is user exist or delet or blocked. at first the user from the usermodel
+    const isUserExist = await User
+        .findOne({ id})
+        .select("+password");
+
+    if (!isUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "Invalid User !!");
+    }
+
+    const { passwordChangeDate, isDeleted, status } =
+        isUserExist;
+    if (iat !== undefined && passwordChangeDate) {
+        const iatISO = new Date(iat * 1000);
+        if (passwordChangeDate > iatISO) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "After change password, you need to login first !!"
+            );
+        }
+    }
+
+    if (isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted !!");
+    }
+
+    if (status === "blocked") {
+        throw new AppError(httpStatus.FORBIDDEN, "User is Blocked !!");
+    }
+
+    // craete token and send to the user
+
+    const jwtPayload = {
+        id: isUserExist?.id,
+        email:isUserExist?.email,
+        role: isUserExist?.role,
+    };
+    const accessToken = createToken(
+        jwtPayload,
+        config.jwt_access_secret as string,
+        config.access_secret_expires_in as string
+    );
+
+    return {
+        accessToken,
+    };
+};
 
 export const authServices = {
     loginUserToSite,
-    changePasswordIntoDB
+    changePasswordIntoDB,
+    refreshTokenService
 }

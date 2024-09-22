@@ -22,8 +22,10 @@ const loginUserToSite = async (payload: TLoginUser) => {
         throw new AppError(httpStatus.FORBIDDEN, "User is Blocked !!");
     }
 
+    // here verifyPassword work when i install mongoose bcrytp and also add user interface=> verifyPassword: (password: string) => Promise<boolean>;
+    const matchPassword = await isUserExist.verifyPassword(password);
 
-    if (password !==isUserExist.password) {
+    if (!matchPassword) {
         throw new AppError(httpStatus.FORBIDDEN, "Wrong password !!");
     }
 

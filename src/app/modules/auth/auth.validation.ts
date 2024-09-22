@@ -5,7 +5,7 @@ const loginValidationSchema = z.object({
     password: z.string({ required_error: "password is required !!!" }),
 });
 const forgetPasswordValidation = z.object({
-    email: z.string({ required_error: "id is required !!" }),
+    email: z.string({ required_error: "email is required !!" }),
 });
 
 const resetPasswordValidation = z.object({

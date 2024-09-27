@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { model, Schema } from "mongoose";
 import { TEvent } from "./event.interface";
 import { Event_Category, Event_status, TActivities } from "./event.constatnt";
+
 
 const activitiesSchema = new Schema<TActivities>({
     day: {
@@ -16,7 +18,8 @@ const activitiesSchema = new Schema<TActivities>({
 const eventSchema = new Schema<TEvent>({
     eventCode: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
     title: {
         type: String,
@@ -85,6 +88,6 @@ const eventSchema = new Schema<TEvent>({
         type: [activitiesSchema],
         required: true
     }
-})
+}, { timestamps: true })
 
 export const Event= model<TEvent>('Event',eventSchema)

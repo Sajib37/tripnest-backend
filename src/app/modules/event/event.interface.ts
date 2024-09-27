@@ -1,6 +1,8 @@
 import { TActivities, TEventCategory, TEventStatus } from "./event.constatnt";
 
 export interface TEvent{
+    save(): unknown;
+    isModified(arg0: string): unknown;
     eventCode: string;
     title: string;
     description: string;
@@ -12,8 +14,8 @@ export interface TEvent{
     price: number;
     capacity: number;
     availableSlots: number;
-    status: TEventStatus;
-    photo: string;
+    status?: TEventStatus;
+    photo?: string;
     category: TEventCategory;
     includedServices: string[];
     excludedServices: string[];

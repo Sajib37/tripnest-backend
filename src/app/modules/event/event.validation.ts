@@ -4,19 +4,19 @@ const ActivitiesValidation = z.object({
     activities: z.array(z.string()) 
   });
 const createEventValidation = z.object({
-    eventCode: z.string(),
+    eventCode: z.string().optional(),
     title:z.string(),
     description:z.string(),
     from:z.string(),
     destinations: z.array(z.string()),
-    startDate:z.date(),
-    endDate:z.date(),
-    bookingDeadline:z.date(),
+    startDate:z.string(),
+    endDate:z.string(),
+    bookingDeadline:z.string(),
     price: z.number().positive(),
     capacity: z.number().positive(),
     availableSlots: z.number().positive(),
-    status:z.enum(["completed", "on-going", "upcoming"]),
-    photo: z.string(),
+    status:z.enum(["completed", "on-going", "upcoming"]).optional(),
+    photo: z.string().optional(),
     category:z.enum(["Economic" , "Standard" , "Premium"]),
     includedServices:z.array(z.string()),
     excludedServices:z.array(z.string()),
@@ -25,7 +25,6 @@ const createEventValidation = z.object({
 })
 
 const updateEventValidation = z.object({
-    eventCode: z.string().optional(),
     title:z.string().optional(),
     description:z.string().optional(),
     from:z.string().optional(),

@@ -63,9 +63,42 @@ const refreshToken = catchAsync(async (req: Request, res: Response, next: NextFu
     })
 })
 
+const forgetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const email: string = req.body.email;
+
+    const result= await authServices.forgetPassword(email)
+
+    sendResponse(res, {
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Reset link generated Successfully!!",
+        data: result
+    })
+})
+
+const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    // const token: string = req.headers.authorization as string;
+    // const id: string = req.body.id as string;
+    // here I can retrive the email and token form ui-link in frontend and send the backend as object
+    const email: string = req.body.email as string;
+    const newPassword: string = req.body.newPassword as string;
+    const token: string =req.body.token
+    const result= await authServices.resetPasswordIntoDb(email,newPassword,token)
+
+    sendResponse(res, {
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Password reset Successfully!!",
+        data: result
+    })
+})
 
 export const authController = {
     loginUser,
     changePassword,
-    refreshToken
+    refreshToken,
+    forgetPassword,
+    resetPassword
 }

@@ -6,6 +6,7 @@ import config from "../../config";
 import { createToken } from "./auth.utils";
 import { JwtPayload } from "jsonwebtoken";
 import jwt from 'jsonwebtoken';
+import { sendResetLinkToEmail } from "../../utils/sendEmail";
 
 const loginUserToSite = async (payload: TLoginUser) => {
     const { email, password } = payload;
@@ -152,8 +153,85 @@ const refreshTokenService = async (token: string) => {
     };
 };
 
+const forgetPassword = async (userEmail: string) => {
+    const isUserExist = await User
+        .findOne({email:userEmail})
+        .select("+password");
+
+    if (!isUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "Invalid User !!");
+    }
+    const { isDeleted, status, email,id,role } = isUserExist;
+    if (isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted !!");
+    }
+
+    if (status === "blocked") {
+        throw new AppError(httpStatus.FORBIDDEN, "User is Blocked !!");
+    }
+
+    // craete token and send to the user
+
+    const jwtPayload = {
+        id,
+        role,
+        email
+    };
+    const resetToken = createToken(
+        jwtPayload,
+        config.jwt_access_secret as string,
+        "5m"
+    );
+
+    const resetUiLink = `${config.reset_ui_link}?email=${email}&token=${resetToken}`;
+    sendResetLinkToEmail(email, resetUiLink);
+};
+
+const resetPasswordIntoDb = async (
+    email: string,
+    newPassword: string,
+    token:string
+) => {
+    const isUserExist = await User.findOne({ email }).select("+password");
+
+    if (!isUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "Invalid User !!");
+    }
+    const { isDeleted, status,id } = isUserExist;
+    if (isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted !!");
+    }
+
+    if (status === "blocked") {
+        throw new AppError(httpStatus.FORBIDDEN, "User is Blocked !!");
+    }
+
+    const decoded: JwtPayload = jwt.verify(
+        token,
+        config.jwt_access_secret as string
+    ) as JwtPayload;
+
+    console.log(decoded, "\n", token);
+
+    if (decoded.userId !== id) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Wrong id ! you are forbidden !!"
+        );
+    }
+
+    await User.findOneAndUpdate(
+        { email },
+        { password: newPassword },
+        { new: true }
+    );
+    return "";
+};
+
 export const authServices = {
     loginUserToSite,
     changePasswordIntoDB,
-    refreshTokenService
+    refreshTokenService,
+    forgetPassword,
+    resetPasswordIntoDb
 }

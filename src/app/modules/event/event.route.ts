@@ -22,7 +22,13 @@ router.post(
     validateRequest(eventValidations.createEventValidation),
     eventControllers.createEvent
 );
-
-
+router.patch(
+    "/update-event/:id",
+    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+    upload.single("file"),
+    parseDataIntoJSON,
+    validateRequest(eventValidations.createEventValidation),
+    eventControllers.upadetEvent
+);
 
 export const eventRoutes = router;

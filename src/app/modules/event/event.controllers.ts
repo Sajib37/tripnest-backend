@@ -15,6 +15,19 @@ const createEvent = catchAsync(async (req, res) => {
     });
 });
 
+const upadetEvent = catchAsync(async (req, res) => {
+    const payload: Partial<TEvent> = req.body;
+    const id: string = req.params.id;
+    const result = await eventServices.updateEventIntoDB(payload, req.file,id)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Event updated successfully!",
+        data: result,
+    });
+});
+
 export const eventControllers = {
-    createEvent
+    createEvent,
+    upadetEvent
 }

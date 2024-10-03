@@ -30,5 +30,7 @@ router.patch(
     validateRequest(eventValidations.createEventValidation),
     eventControllers.upadetEvent
 );
+router.get('/', eventControllers.getAllEvent)
+router.get('/:id', eventControllers.getSingleEvent)
 
 export const eventRoutes = router;

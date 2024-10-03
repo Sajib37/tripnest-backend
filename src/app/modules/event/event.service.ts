@@ -6,6 +6,7 @@ import { sendImageToCloudinary } from "../../utils/sendImageToCloudinary";
 import { generateEventCode } from "./event.utils";
 import AppError from "../../errors/appError";
 import httpStatus from "http-status";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const createEventIntoDB = async (payload: Partial<TEvent>, file: any) => {
     const { startDate, endDate, title } = payload;
@@ -104,9 +105,39 @@ const updateEventIntoDB = async (
     } else {
         payload.status = isExist.status;
     }
-    return payload;
+    const result = await Event.findByIdAndUpdate(id, payload, { new: true });
+    return result;
 };
+
+const getAllEventFromDB = async (query: Record<string, unknown>) => {
+    const eventSearchableFields: string[] = ["eventCode", "title"];
+    const eventQuery = new QueryBuilder<TEvent>(Event.find(), query)
+        .search(eventSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = await eventQuery.modelQuery;
+    if (!result) {
+        throw new AppError(httpStatus.NOT_FOUND, "All Event not Found !");
+    }
+    const meta = await eventQuery.countTotal();
+    return {
+        result,
+        meta,
+    };
+};
+
+const getSingleEventFromDB = async (id: string) => {
+    const result = await Event.findById(id);
+    if (!result) {
+        throw new AppError(httpStatus.NOT_FOUND, "Event not Found !");
+    }
+    return result;
+}
 export const eventServices = {
     createEventIntoDB,
     updateEventIntoDB,
+    getAllEventFromDB,
+    getSingleEventFromDB
 };

@@ -11,6 +11,7 @@ import { Tuser } from "../users/users.interface";
 import mongoose from "mongoose";
 import { User } from "../users/users.model";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { JwtPayload } from "jsonwebtoken";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createProfileIntoDB = async (payload: Partial<TProfile>, file: any) => {
@@ -118,8 +119,25 @@ const getAllProfilesFromDB = async (query: Record<string, unknown>) => {
     };
 }
 
+const getMeFromDD = async (user: JwtPayload) => {
+    // if (!token) {
+    //     throw new AppError(httpStatus.NOT_FOUND,"Token is not found!")
+    // }
+    // // verify token and get the decoded
+    // const decoded: JwtPayload = await jwt.verify(
+    //     token,
+    //     config.jwt_access_secret as string
+    // );
+
+    const result = await Profile.findOne({ id: user.id })
+    
+    return result;
+};
+
+
 export const profileServices = {
     createProfileIntoDB,
     upadteTouristProfile,
-    getAllProfilesFromDB
+    getAllProfilesFromDB,
+    getMeFromDD
 };

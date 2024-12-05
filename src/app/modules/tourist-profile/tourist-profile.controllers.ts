@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { TProfile } from "./tourist-profile.interface";
 import { profileServices } from "./tourist-profile.service";
+import { NextFunction, Request, Response } from "express";
+import { JwtPayload } from "jsonwebtoken";
 
 
 const createProfile = catchAsync(async (req, res) => {
@@ -40,8 +43,24 @@ const getAllProfile = catchAsync(async (req, res) => {
     });
 });
 
+const getMe = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const user :JwtPayload=req.user
+        // const token: string = req.headers.authorization as string;
+        const result = await profileServices.getMeFromDD(user)
+        
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: "your data get successfully!",
+            data: result,
+        });
+    }
+);
+
 export const profileControllers = {
     createProfile,
     upadetProfile,
-    getAllProfile
+    getAllProfile,
+    getMe
 }

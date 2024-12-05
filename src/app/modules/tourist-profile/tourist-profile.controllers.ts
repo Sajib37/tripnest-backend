@@ -45,8 +45,7 @@ const getAllProfile = catchAsync(async (req, res) => {
 
 const getMe = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-        const user :JwtPayload=req.user
-        // const token: string = req.headers.authorization as string;
+        const user: JwtPayload = req.user;
         const result = await profileServices.getMeFromDD(user)
         
         sendResponse(res, {

@@ -66,7 +66,6 @@ const createProfileIntoDB = async (payload: Partial<TProfile>, file: any) => {
     } catch (err) {
         await session.abortTransaction();
         await session.endSession();
-        console.log(err)
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Failed to create new admin and User!! "
@@ -120,15 +119,6 @@ const getAllProfilesFromDB = async (query: Record<string, unknown>) => {
 }
 
 const getMeFromDD = async (user: JwtPayload) => {
-    // if (!token) {
-    //     throw new AppError(httpStatus.NOT_FOUND,"Token is not found!")
-    // }
-    // // verify token and get the decoded
-    // const decoded: JwtPayload = await jwt.verify(
-    //     token,
-    //     config.jwt_access_secret as string
-    // );
-
     const result = await Profile.findOne({ id: user.id })
     
     return result;

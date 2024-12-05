@@ -15,7 +15,12 @@ router.delete(
     auth(USER_ROLE.admin, USER_ROLE.superAdmin),
     userControllers.deletUser
 );
-router.patch("/change-role")
+router.patch(
+    "/change-role/:id",
+    // auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+    userControllers.changeRole
+);
+
 router.get(
     "/",
     // auth(USER_ROLE.admin, USER_ROLE.superAdmin),

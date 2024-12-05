@@ -6,6 +6,7 @@ import { User } from "./users.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 import mongoose, { mongo } from "mongoose";
 import { Profile } from "../tourist-profile/tourist-profile.model";
+import { TUserRole } from "./users.constant";
 
 const blockedUserIntoDB = async (id: string) => {
     const user = await User.findById(id);
@@ -49,6 +50,58 @@ const blockedUserIntoDB = async (id: string) => {
         await session.endSession();
 
         return profileStatus;
+    } catch (err) {
+        await session.abortTransaction();
+        await session.endSession();
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Failed to delet user and profile!! "
+        );
+    }
+    
+    return '';
+};
+
+const changeUserRoleIntoDB = async (id: string,role:TUserRole) => {
+    const user = await User.findById(id);
+    if (!user) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "user not found for this email !"
+        );
+    }
+
+    const session = await mongoose.startSession();
+
+    try {
+        await session.startTransaction();
+        const userRole = await User.findByIdAndUpdate(
+            id,
+            { role:role },
+            { new: true, session }
+        );
+        if (!userRole) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Failed to change user role!!"
+            );
+        }
+
+        const profileRole = await Profile.findOneAndUpdate(
+            { id: user.id },
+            { role:role },
+            { new: true, session }
+        );
+        if (!profileRole) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Failed to change profile role!!"
+            );
+        }
+        await session.commitTransaction();
+        await session.endSession();
+
+        return profileRole;
     } catch (err) {
         await session.abortTransaction();
         await session.endSession();
@@ -137,4 +190,5 @@ export const userService = {
     blockedUserIntoDB,
     deletUserIntoDB,
     getAllUserFromDB,
+    changeUserRoleIntoDB
 };

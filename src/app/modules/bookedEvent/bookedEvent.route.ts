@@ -21,7 +21,11 @@ router.get(
     auth(USER_ROLE.admin, USER_ROLE.user, USER_ROLE.superAdmin),
     bookedEventControllers.getMyEvents
 );
+router.get(
+    "/get-all-user-by-event/:eventCode",
+    auth(USER_ROLE.admin, USER_ROLE.user, USER_ROLE.superAdmin),
+    bookedEventControllers.getUserByEvent
+);
 
-// my event
-// booked user
+
 export const bookedEventRoutes = router;

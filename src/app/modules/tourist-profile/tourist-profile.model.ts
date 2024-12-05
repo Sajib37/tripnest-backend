@@ -50,9 +50,6 @@ const profileSchema = new Schema<TProfile>(
             bcrypt:true,
             select:0
         },
-        passwordChangeDate: {
-            type: Date
-        },
         role: {
             type: String,
             enum: [USER_ROLE.admin, USER_ROLE.superAdmin, USER_ROLE.user],

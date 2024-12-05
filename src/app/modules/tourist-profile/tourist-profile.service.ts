@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status";
 import AppError from "../../errors/appError";
 import { Profile } from "./tourist-profile.model";
@@ -35,6 +36,29 @@ const createProfileIntoDB = async (payload: Partial<TProfile>, file: any) => {
 }
 
 
+const upadteTouristProfile = async (payload: Partial<TProfile>,file: any,id: string) => {
+    const isExist = await Profile.findById(id)
+    if (!isExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "Profile not Found!");
+    }
+
+    if (file) {
+        // send image to cloudinary
+        const imageName = `imageOf${payload.email}`;
+        // console.log("path: ", file.path)
+        const profileImage: UploadApiResponse = await sendImageToCloudinary(
+            imageName,
+            file.path
+        );
+        // set the secure url in payload profileimg
+        payload.photo = profileImage?.secure_url;
+    }
+
+    const result = await Profile.findByIdAndUpdate(id, payload, { new: true });
+    return result;
+}
+
 export const profileServices = {
-    createProfileIntoDB 
+    createProfileIntoDB,
+    upadteTouristProfile
 }

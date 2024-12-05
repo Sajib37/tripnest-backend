@@ -9,7 +9,6 @@ export interface TProfile{
     id: string;
     email: string;
     password: string;
-    passwordChangeDate?: Date;
     role: TUserRole;
     isDeleted: boolean;
     status: 'blocked'|'active';

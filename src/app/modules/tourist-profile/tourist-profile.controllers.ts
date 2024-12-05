@@ -17,6 +17,19 @@ const createProfile = catchAsync(async (req, res) => {
 });
 
 
+const upadetProfile = catchAsync(async (req, res) => {
+    const payload: Partial<TProfile> = req.body;
+    const id: string = req.params.id;
+    const result = await profileServices.upadteTouristProfile(payload, req.file, id);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Profile updated successfully!",
+        data: result,
+    });
+});
+
 export const profileControllers = {
-    createProfile
+    createProfile,
+    upadetProfile
 }

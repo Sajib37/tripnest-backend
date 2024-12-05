@@ -23,9 +23,14 @@ router.post('/create-profile',
     profileControllers.createProfile
 );
 
-router.put('/update-profile');
-router.put('/change-role');
-router.put('/blocked-user/:id');
+router.patch('/update-profile/:id',
+    upload.single("file"),
+    parseDataIntoJSON,
+    validateRequest(profileValidation.updateProfileValidation),
+    profileControllers.upadetProfile
+);
+router.patch('/change-role/:id');
+router.patch('/blocked-user/:id');
 router.delete('/delet-user/:id');
 
 export const profileRoutes= router

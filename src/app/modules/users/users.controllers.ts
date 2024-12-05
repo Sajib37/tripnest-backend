@@ -4,13 +4,13 @@ import { sendResponse } from "../../utils/sendResponse";
 import { userService } from "./users.service";
 import { Tuser } from "./users.interface";
 
-const createUser = catchAsync(async (req, res) => {
+const createAdmin = catchAsync(async (req, res) => {
     const payload: Partial<Tuser> = req.body;
-    const result = await userService.createUserIntoDB(payload)
+    const result = await userService.createAdminIntoDB(payload)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Sign up successfull!",
+        message: "Admin created successfully!",
         data: result,
     });
 });
@@ -50,7 +50,7 @@ const getAllUser = catchAsync(async (req, res) => {
 })
 
 export const userControllers = {
-    createUser,
+    createAdmin,
     blockedUser,
     deletUser,
     getAllUser

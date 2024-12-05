@@ -1,15 +1,16 @@
 import { z } from "zod";
+import { USER_ROLE } from "../users/users.constant";
 
 const userNameValidation = z.object({
     firstName: z.string(),
-    middleName: z.string(),
     lastName: z.string(),
 });
 
 const createProfileValidation = z.object({
-    name:userNameValidation,
+    name: userNameValidation,
+    email: z.string(),
+    password: z.string(),
     age:z.number(),
-    email:z.string(),
     dateOfBirth:z.string(),
     contactNumber:z.string(),
     gurdianContactNumber:z.string(),
@@ -20,8 +21,12 @@ const createProfileValidation = z.object({
 
 const updateProfileValidation = z.object({
     name:userNameValidation.optional(),
-    age:z.number().optional(),
-    email:z.string().optional(),
+    age: z.number().optional(),
+    email: z.string().optional(),
+    password: z.string().optional(),
+    role: z.enum([USER_ROLE.admin, USER_ROLE.superAdmin, USER_ROLE.user]).optional(),
+    isDeleted: z.boolean().optional(),
+    status: z.enum(['blocked','active']).optional(),
     dateOfBirth:z.string().optional(),
     contactNumber:z.string().optional(),
     gurdianContactNumber:z.string().optional(),

@@ -8,9 +8,10 @@ import { USER_ROLE } from "./users.constant";
 const router = Router();
 
 router.post(
-    "/sign-up",
+    "/create-admin",
+    auth(USER_ROLE.superAdmin),
     validateRequest(usersValidation.createUserValidation),
-    userControllers.createUser
+    userControllers.createAdmin
 );
 router.put(
     "/blocked-user/:id",
@@ -25,7 +26,7 @@ router.delete(
 
 router.get(
     "/",
-    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+    // auth(USER_ROLE.admin, USER_ROLE.superAdmin),
     userControllers.getAllUser
 );
 

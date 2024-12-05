@@ -1,5 +1,7 @@
 import { model, Schema } from "mongoose";
 import { TProfile, TUserName } from "./tourist-profile.interface";
+import { USER_ROLE } from "../users/users.constant";
+import mongooseBcrypt from 'mongoose-bcrypt';
 
 export const userNameSchema = new Schema<TUserName>({
     firstName: {
@@ -37,9 +39,33 @@ const profileSchema = new Schema<TProfile>(
             required: true,
             unique: true
         },
-        user: {
-            type: Schema.Types.ObjectId,
+        email: {
+            type: String,
+            unique: true,
+            required: true
+        },
+        password: {
+            type: String,
             required: true,
+            bcrypt:true,
+            select:0
+        },
+        passwordChangeDate: {
+            type: Date
+        },
+        role: {
+            type: String,
+            enum: [USER_ROLE.admin, USER_ROLE.superAdmin, USER_ROLE.user],
+            default: USER_ROLE.user
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false,
+        },
+        status: {
+            type: String,
+            default: 'active',
+            enum:['blocked','active']
         },
         name: {
             type: userNameSchema,
@@ -47,11 +73,6 @@ const profileSchema = new Schema<TProfile>(
         },
         age: {
             type: Number,
-            required: true
-        },
-        email: {
-            type: String,
-            unique:true,
             required: true
         },
         dateOfBirth: {
@@ -84,5 +105,7 @@ const profileSchema = new Schema<TProfile>(
     },
     { timestamps: true }
 );
+// Add the mongoose-bcrypt plugin
+profileSchema.plugin(mongooseBcrypt);
 
 export const Profile = model<TProfile>("Profile", profileSchema);

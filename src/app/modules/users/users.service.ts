@@ -5,8 +5,8 @@ import { User } from "./users.model";
 import { generateId } from "./users.utils";
 import QueryBuilder from "../../builder/QueryBuilder";
 
-const createUserIntoDB = async (payload: Partial<Tuser>) => {
-    const { email, role } = payload;
+const createAdminIntoDB = async (payload: Partial<Tuser>) => {
+    const { email} = payload;
     const isExist = await User.findOne({ email });
     if (isExist) {
         throw new AppError(
@@ -14,10 +14,8 @@ const createUserIntoDB = async (payload: Partial<Tuser>) => {
             "This email already exist !"
         );
     }
-    if (!role) {
-        throw new AppError(httpStatus.BAD_REQUEST, "user role required !");
-    }
-    payload.id = await generateId(role);
+    payload.role='admin'
+    payload.id = await generateId(payload.role);
     const result = await User.create(payload);
     return result;
 };
@@ -74,7 +72,7 @@ const getAllUserFromDB = async (query: Record<string, unknown>) => {
     }
 };
 export const userService = {
-    createUserIntoDB,
+    createAdminIntoDB,
     blockedUserIntoDB,
     deletUserIntoDB,
     getAllUserFromDB,

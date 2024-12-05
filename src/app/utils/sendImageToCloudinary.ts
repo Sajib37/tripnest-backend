@@ -25,7 +25,7 @@ export const sendImageToCloudinary = async (
             });
 
         // now delet the file from the uploads folder
-        fs.unlink(path, (err: unknown) => {
+        await fs.unlink(path, (err: unknown) => {
             if (err) {
                 console.error(`Error removing file: ${err}`);
                 return;

@@ -66,7 +66,6 @@ const createProfileIntoDB = async (payload: Partial<TProfile>, file: any) => {
     } catch (err) {
         await session.abortTransaction();
         await session.endSession();
-        console.log(err)
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Failed to create new admin and User!! "
@@ -108,7 +107,7 @@ const getAllProfilesFromDB = async (query: Record<string, unknown>) => {
         .sort()
         .paginate()
         .fields();
-    const result = await eventQuery.modelQuery;
+    const result = await eventQuery.modelQuery.populate('user');
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "All profile not Found !");
     }
@@ -120,24 +119,21 @@ const getAllProfilesFromDB = async (query: Record<string, unknown>) => {
 }
 
 const getMeFromDD = async (user: JwtPayload) => {
-    // if (!token) {
-    //     throw new AppError(httpStatus.NOT_FOUND,"Token is not found!")
-    // }
-    // // verify token and get the decoded
-    // const decoded: JwtPayload = await jwt.verify(
-    //     token,
-    //     config.jwt_access_secret as string
-    // );
-
-    const result = await Profile.findOne({ id: user.id })
+    const result = await Profile.findOne({ id: user.id }).populate('user')
     
     return result;
 };
+
+const getSingleProfileFromDB = async (userId: string) => {
+    const result = await Profile.findOne({ id: userId }).populate('user');
+    return result;
+}
 
 
 export const profileServices = {
     createProfileIntoDB,
     upadteTouristProfile,
     getAllProfilesFromDB,
-    getMeFromDD
+    getMeFromDD,
+    getSingleProfileFromDB
 };

@@ -1,4 +1,6 @@
+import { Types } from "mongoose";
+
 export interface TbookedEvent{
-    eventCode: string;
-    userId: string;
+    eventCode: Types.ObjectId;
+    userId: Types.ObjectId;
 }

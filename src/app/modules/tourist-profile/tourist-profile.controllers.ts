@@ -45,8 +45,7 @@ const getAllProfile = catchAsync(async (req, res) => {
 
 const getMe = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-        const user :JwtPayload=req.user
-        // const token: string = req.headers.authorization as string;
+        const user: JwtPayload = req.user;
         const result = await profileServices.getMeFromDD(user)
         
         sendResponse(res, {
@@ -58,9 +57,24 @@ const getMe = catchAsync(
     }
 );
 
+const getSingleProfile = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId: string = req.params.userId;
+        const result = await profileServices.getSingleProfileFromDB(userId)
+        
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: "Get single profile data get successfully!",
+            data: result,
+        });
+    }
+);
+
 export const profileControllers = {
     createProfile,
     upadetProfile,
     getAllProfile,
-    getMe
+    getMe,
+    getSingleProfile
 }

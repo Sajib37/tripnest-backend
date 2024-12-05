@@ -14,7 +14,9 @@ const parseDataIntoJSON = (req: Request, res: Response, next: NextFunction) => {
 };
 
 
-router.get('/');
+router.get('/',
+    profileControllers.getAllProfile
+);
 
 router.post('/create-profile',
     upload.single("file"),
@@ -30,9 +32,5 @@ router.patch('/update-profile/:id',
     profileControllers.upadetProfile
 );
 
-
-router.patch('/change-role/:id');
-router.patch('/blocked-user/:id');
-router.delete('/delet-user/:id');
 
 export const profileRoutes= router

@@ -10,6 +10,7 @@ import { generateUID } from "./tourist-profile.utils";
 import { Tuser } from "../users/users.interface";
 import mongoose from "mongoose";
 import { User } from "../users/users.model";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createProfileIntoDB = async (payload: Partial<TProfile>, file: any) => {
@@ -98,7 +99,27 @@ const upadteTouristProfile = async (
     return result;
 };
 
+const getAllProfilesFromDB = async (query: Record<string, unknown>) => {
+    const eventSearchableFields: string[] = ["eventCode", "title"];
+    const eventQuery = new QueryBuilder<TProfile>(Profile.find(), query)
+        .search(eventSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = await eventQuery.modelQuery;
+    if (!result) {
+        throw new AppError(httpStatus.NOT_FOUND, "All profile not Found !");
+    }
+    const meta = await eventQuery.countTotal();
+    return {
+        result,
+        meta,
+    };
+}
+
 export const profileServices = {
     createProfileIntoDB,
     upadteTouristProfile,
+    getAllProfilesFromDB
 };

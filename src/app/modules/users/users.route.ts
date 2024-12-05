@@ -5,7 +5,7 @@ import { USER_ROLE } from "./users.constant";
 
 const router = Router();
 
-router.put(
+router.patch(
     "/blocked-user/:id",
     auth(USER_ROLE.admin, USER_ROLE.superAdmin),
     userControllers.blockedUser
@@ -15,7 +15,7 @@ router.delete(
     auth(USER_ROLE.admin, USER_ROLE.superAdmin),
     userControllers.deletUser
 );
-
+router.patch("/change-role")
 router.get(
     "/",
     // auth(USER_ROLE.admin, USER_ROLE.superAdmin),

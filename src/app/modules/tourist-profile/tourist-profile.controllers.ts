@@ -28,8 +28,20 @@ const upadetProfile = catchAsync(async (req, res) => {
         data: result,
     });
 });
+const getAllProfile = catchAsync(async (req, res) => {
+    const query: Record<string, unknown> = req.query;
+    const result = await profileServices.getAllProfilesFromDB(query);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "get all profile successfully!",
+        meta:result.meta,
+        data: result.result,
+    });
+});
 
 export const profileControllers = {
     createProfile,
-    upadetProfile
+    upadetProfile,
+    getAllProfile
 }

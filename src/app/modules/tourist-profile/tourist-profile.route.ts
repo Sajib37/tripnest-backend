@@ -6,7 +6,6 @@ import { profileControllers } from "./tourist-profile.controllers";
 import auth from "../../middlewares/auth";
 import { USER_ROLE } from "../users/users.constant";
 
-
 const router = Router();
 
 // parse the file format data
@@ -15,19 +14,24 @@ const parseDataIntoJSON = (req: Request, res: Response, next: NextFunction) => {
     next();
 };
 
+router.get("/", profileControllers.getAllProfile);
 
-router.get('/',
-    profileControllers.getAllProfile
+router.get(
+    "/:userId",
+    auth(USER_ROLE.admin, USER_ROLE.user),
+    profileControllers.getSingleProfile
 );
 
-router.post('/create-profile',
+router.post(
+    "/create-profile",
     upload.single("file"),
     parseDataIntoJSON,
     validateRequest(profileValidation.createProfileValidation),
     profileControllers.createProfile
 );
 
-router.patch('/update-profile/:id',
+router.patch(
+    "/update-profile/:id",
     upload.single("file"),
     parseDataIntoJSON,
     validateRequest(profileValidation.updateProfileValidation),
@@ -36,8 +40,8 @@ router.patch('/update-profile/:id',
 
 router.get(
     "/me",
-    auth(USER_ROLE.admin,USER_ROLE.user),
+    auth(USER_ROLE.admin, USER_ROLE.user),
     profileControllers.getMe
 );
 
-export const profileRoutes= router
+export const profileRoutes = router;

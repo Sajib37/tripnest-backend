@@ -25,10 +25,12 @@ const moduleRoutes = [
         route: profileRoutes,
     },
     {
-        path: "/booked-events",
+        path: "/event-handler",
         route: bookedEventRoutes
     }
 ];
+
+
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 

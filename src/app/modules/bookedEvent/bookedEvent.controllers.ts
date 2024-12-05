@@ -30,8 +30,33 @@ const cancelEvent = catchAsync(async (req, res) => {
     });
 });
 
+const getMyEvents = catchAsync(async (req, res) => {
+    const user:JwtPayload = req.user;
+    const userID: string = user.id;
+    const result = await bookedEventServices.getMyEventsFromDB(userID)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Get my all events successfully!",
+        data: result,
+    });
+});
+
+const getUserByEvent = catchAsync(async (req, res) => {
+    const eventCode: string = req.params.eventCode;
+    const result = await bookedEventServices.getUserByEventFromDB(eventCode)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Get all users by event successfully!",
+        data: result,
+    });
+});
+
 
 export const bookedEventControllers = {
     bookedEvents,
-    cancelEvent
+    cancelEvent,
+    getMyEvents,
+    getUserByEvent
 }

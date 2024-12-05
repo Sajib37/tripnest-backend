@@ -43,7 +43,7 @@ const profileSchema = new Schema<TProfile>(
             type: Schema.Types.ObjectId,
             required: [true, "user is required!"],
             unique: true,
-            ref: "user",
+            ref: "User",
         },
         email: {
             type: String,

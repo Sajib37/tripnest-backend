@@ -5,12 +5,12 @@ const bookedEventSchema = new Schema<TbookedEvent>({
     eventCode: {
         type: Schema.Types.ObjectId,
         required: [true, "Event code is required!"],
-        ref: "event", 
+        ref: "Event", 
     },
     userId: {
         type: Schema.Types.ObjectId,
         required: [true, "User is required!"],
-        ref: "user",
+        ref: "User",
     },
 });
 

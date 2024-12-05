@@ -16,4 +16,12 @@ router.delete(
     bookedEventControllers.cancelEvent
 );
 
+router.get(
+    "/my-events",
+    auth(USER_ROLE.admin, USER_ROLE.user, USER_ROLE.superAdmin),
+    bookedEventControllers.getMyEvents
+);
+
+// my event
+// booked user
 export const bookedEventRoutes = router;

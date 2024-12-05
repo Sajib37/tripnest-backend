@@ -107,7 +107,7 @@ const getAllProfilesFromDB = async (query: Record<string, unknown>) => {
         .sort()
         .paginate()
         .fields();
-    const result = await eventQuery.modelQuery;
+    const result = await eventQuery.modelQuery.populate('user');
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "All profile not Found !");
     }
@@ -119,15 +119,21 @@ const getAllProfilesFromDB = async (query: Record<string, unknown>) => {
 }
 
 const getMeFromDD = async (user: JwtPayload) => {
-    const result = await Profile.findOne({ id: user.id })
+    const result = await Profile.findOne({ id: user.id }).populate('user')
     
     return result;
 };
+
+const getSingleProfileFromDB = async (userId: string) => {
+    const result = await Profile.findOne({ id: userId }).populate('user');
+    return result;
+}
 
 
 export const profileServices = {
     createProfileIntoDB,
     upadteTouristProfile,
     getAllProfilesFromDB,
-    getMeFromDD
+    getMeFromDD,
+    getSingleProfileFromDB
 };

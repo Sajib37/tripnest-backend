@@ -57,9 +57,24 @@ const getMe = catchAsync(
     }
 );
 
+const getSingleProfile = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId: string = req.params.userId;
+        const result = await profileServices.getSingleProfileFromDB(userId)
+        
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: "Get single profile data get successfully!",
+            data: result,
+        });
+    }
+);
+
 export const profileControllers = {
     createProfile,
     upadetProfile,
     getAllProfile,
-    getMe
+    getMe,
+    getSingleProfile
 }

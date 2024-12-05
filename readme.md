@@ -23,16 +23,16 @@ Tripnest is a web platform where users can explore and book events. Users can cr
 ## User API Design:
 | Params|   API                               |   Description                                   |
 |-------------------------------------|-------------------------------------------------|
-|user ObjectId| ```POST /api/v1/users/change-role/:id``` |Super Admin and Admin can be changed the user role|
-|user ObjectId| ```POST /api/v1/users/delet-user/:id``` | Super Admin and Admin  can be deleted an user|
+|user ObjectId| ```PATCH /api/v1/users/change-role/:id``` |Super Admin and Admin can be changed the user role|
+|user ObjectId| ```DELET /api/v1/users/delet-user/:id``` | Super Admin and Admin  can be deleted an user|
 || ```GET /api/v1/users/``` | Super Admin and Admin can be get all users|
-|user ObjectId| ```GET /api/v1/users/blocked-user/:id``` |Super Admin and Admin  can be blocked an user|
+|user ObjectId| ```PATCH /api/v1/users/blocked-user/:id``` |Super Admin and Admin  can be blocked an user|
 
 ## Event API Design:
 | Params|   API                               |   Description                                   |
 |-------------------------------------|-------------------------------------------------|
 || ```POST /api/v1/event/create-event``` |Super Admin and Admin can can create an event|
-|user ObjectId| ```POST /api/v1/event/update-event/:id``` | Super Admin and Admin  can be updated an event|
+|user ObjectId| ```PATCH /api/v1/event/update-event/:id``` | Super Admin and Admin  can be updated an event|
 || ```GET /api/v1/event/``` | everyOne can get all events|
 |user ObjectId| ```GET /api/v1/event/:id`` |everyone can get single event by objectId|
 
@@ -40,9 +40,27 @@ Tripnest is a web platform where users can explore and book events. Users can cr
 | Params|   API                               |   Description                                   |
 |-------------------------------------|-------------------------------------------------|
 |custom event code| ```POST /api/v1/event-handler/booked-event/:eventCode``` |Every user can Booked an event|
-|custom event code| ```POST /api/v1/event-handler/cancel-event/:eventCode``` | Every user can cancel their booked event|
+|custom event code| ```DELET /api/v1/event-handler/cancel-event/:eventCode``` | Every user can cancel their booked event|
 || ```GET /api/v1/event-handler/my-events``` | everyOne can get their own booked events|
 |custom event code| ```GET /api/v1/event-handler/get-all-user-by-event/:eventCode`` |Admin and super admin can get all users who booked an event|
+
+## Profile API Design:
+| Params|   API                               |   Description                                   |
+|-------------------------------------|-------------------------------------------------|
+|custom user id| ```GET /api/v1/profile/:userId``` |Admin and super admin can get a single profile using user custom id|
+|| ```POST /api/v1/profile/create-profile``` |Anyone can create their profile|
+|profile objectId| ```PATCH /api/v1/profile/update-profile/:id``` | everyOne can update their own profile|
+|| ```GET /api/v1/profile/me`` |Every Login user can get their own profile|
+|| ```GET /api/v1/profile/`` |Admin and super admin can get all profile|
+
+## Authentication API Design:
+|   API                               |   Description                                   |
+|-------------------------------------|-------------------------------------------------|
+| ```POST /api/v1/auth/login``` |Every signup user can login|
+| ```PUT /api/v1/auth/change-password``` |Every Login user can change their password|
+| ```POST /api/v1/auth/refresh-token``` |refresh Token API|
+| ```POST /api/v1/auth/forget-password`` |Forget password API|
+| ```PATCH /api/v1/auth/reset-password`` |reset password API|
 
 
 ## Installation

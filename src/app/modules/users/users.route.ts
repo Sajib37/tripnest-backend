@@ -1,18 +1,10 @@
 import { Router } from "express";
-import validateRequest from "../../middlewares/validateRequest";
-import { usersValidation } from "./users.validation";
 import { userControllers } from "./users.controllers";
 import auth from "../../middlewares/auth";
 import { USER_ROLE } from "./users.constant";
 
 const router = Router();
 
-router.post(
-    "/create-admin",
-    auth(USER_ROLE.superAdmin),
-    validateRequest(usersValidation.createUserValidation),
-    userControllers.createAdmin
-);
 router.put(
     "/blocked-user/:id",
     auth(USER_ROLE.admin, USER_ROLE.superAdmin),

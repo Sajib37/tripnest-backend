@@ -2,23 +2,8 @@ import httpStatus from "http-status";
 import AppError from "../../errors/appError";
 import { Tuser } from "./users.interface";
 import { User } from "./users.model";
-import { generateId } from "./users.utils";
 import QueryBuilder from "../../builder/QueryBuilder";
 
-const createAdminIntoDB = async (payload: Partial<Tuser>) => {
-    const { email} = payload;
-    const isExist = await User.findOne({ email });
-    if (isExist) {
-        throw new AppError(
-            httpStatus.BAD_REQUEST,
-            "This email already exist !"
-        );
-    }
-    payload.role='admin'
-    payload.id = await generateId(payload.role);
-    const result = await User.create(payload);
-    return result;
-};
 
 const blockedUserIntoDB = async (id: string) => {
     const user = await User.findById(id);
@@ -72,7 +57,6 @@ const getAllUserFromDB = async (query: Record<string, unknown>) => {
     }
 };
 export const userService = {
-    createAdminIntoDB,
     blockedUserIntoDB,
     deletUserIntoDB,
     getAllUserFromDB,

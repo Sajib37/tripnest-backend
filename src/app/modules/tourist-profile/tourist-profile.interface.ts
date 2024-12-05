@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { TUserRole } from "../users/users.constant";
 
 export type TUserName = {
@@ -7,8 +8,10 @@ export type TUserName = {
 
 export interface TProfile{
     id: string;
+    user: Types.ObjectId;
     email: string;
     password: string;
+    passwordChangeDate?: Date;
     role: TUserRole;
     isDeleted: boolean;
     status: 'blocked'|'active';

@@ -29,6 +29,8 @@ router.patch('/update-profile/:id',
     validateRequest(profileValidation.updateProfileValidation),
     profileControllers.upadetProfile
 );
+
+
 router.patch('/change-role/:id');
 router.patch('/blocked-user/:id');
 router.delete('/delet-user/:id');

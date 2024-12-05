@@ -39,6 +39,12 @@ const profileSchema = new Schema<TProfile>(
             required: true,
             unique: true
         },
+        user: {
+            type: Schema.Types.ObjectId,
+            required: [true, "user is required!"],
+            unique: true,
+            ref: "user",
+        },
         email: {
             type: String,
             unique: true,
@@ -49,6 +55,9 @@ const profileSchema = new Schema<TProfile>(
             required: true,
             bcrypt:true,
             select:0
+        },
+        passwordChangeDate: {
+            type: Date
         },
         role: {
             type: String,

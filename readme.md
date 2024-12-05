@@ -63,7 +63,6 @@ Tripnest is a web platform where users can explore and book events. Users can cr
 |                   | ```PATCH /api/v1/auth/reset-password```     | Reset password API                                      |
 
 
-
 ## Installation
 
 1. Clone the repo: `git clone https://github.com/Sajib37/tripnest-backend.git`

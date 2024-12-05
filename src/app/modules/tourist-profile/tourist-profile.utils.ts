@@ -1,26 +1,24 @@
-import { Event } from "./event.model";
+import { Profile } from "./tourist-profile.model";
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const findLastId = async () => {
-    const lastEvent = await Event
+    const lastProfile = await Profile
         .findOne(
         {},
             {
-                eventCode: 1,
+                id: 1,
                 _id: 0,
             }
         )
         .sort({ createdAt: -1 })
         .lean();
 
-    return lastEvent ? lastEvent.eventCode.substring(4) : undefined;
+    return lastProfile ? lastProfile.id.substring(4) : undefined;
 };
-export const generateEventCode = async () => {
+
+export const generateUID = async () => {
     const currentId = (await findLastId()) || (0).toString();
     const incrementId = (Number(currentId) + 1).toString().padStart(6, "0");
-    const eventCode= `EVT-${incrementId}`
+    const eventCode= `UID-${incrementId}`
     return eventCode;
 };
-
-
-
-

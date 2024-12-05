@@ -211,7 +211,6 @@ const resetPasswordIntoDb = async (
         config.jwt_access_secret as string
     ) as JwtPayload;
 
-    console.log(decoded, "\n", token);
 
     if (decoded.userId !== id) {
         throw new AppError(
